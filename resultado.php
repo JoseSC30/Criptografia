@@ -1,11 +1,9 @@
 <?php
 error_reporting(0);
 
-$abc = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z");
-
 function cifra_puro($texto,$clave){
     for($i = 0; $i < strlen($texto) ;$i++){
-
+        $abc = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z");
         if($texto[$i] != " "){
             /*
             $texto[$i]=chr(ord($texto[$i])+$clave);
@@ -19,21 +17,23 @@ function cifra_puro($texto,$clave){
             }
             */
             $esta = false;
-            for($e = 0; ($esta == false); $e++){
+            for($e = 0; $esta == false ; $e++){
                 if($texto[$i] == $abc[$e]){
                     $e = $e + $clave;
+
                     if($e > 26){
                         $e = $e - 27;
                     }else{
                         if($e < 0){
-                            $e = $e + 27;
+                        $e = $e + 27;
                         } 
                     }
                     $esta = true;
+                    $texto[$i] = $abc[$e];
                 }
             }
         }
-        $texto[$i] = $abc[$e];
+        
     }
     return $texto;
 }
