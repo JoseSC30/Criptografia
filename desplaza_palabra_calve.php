@@ -1,27 +1,36 @@
 <?php
-error_reporting(0);
 
-function cifra_puro($texto,$palabra,$clave,$accion){
-    $abc = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z");
+$texto = $_POST['textoClaro'];
+$clave = $_POST['clave'];
+$posicion = $_POST['posicion'];
 
-        $n_abc[0] = $palabra[0];
-        $num = 1;
+$desplazamiento = intval($posicion);
+
+echo puroConClave($texto,$clave,$desplazamiento);
+
+function cifra_puro($texto,$clave,$desplazamiento){
+    $abc = array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z");
+        $texto = strtoupper($texto);
+        $clave = strtoupper($clave);
         
-        for($j =0; $j < strlen($palabra);$j++){
-            if($palabra[$j] != " "){
+        $n_abc[0] = $clave[0];
+        $num = 1;
+        //Ingresa la palabra a n_abc
+        for($j =0; $j < strlen($clave);$j++){
+            if($clave[$j] != " "){
                 $bool = false;
                 for($k = 0; $k < $num;$k++){
-                    if ($n_abc[$k]==$palabra[$j]){
+                    if ($n_abc[$k]==$clave[$j]){
                         $bool = true;
                     }
                 }
                 if($bool == false){
-                 $n_abc[$num]=$palabra[$j];
+                 $n_abc[$num]=$clave[$j];
                     $num = $num + 1;
                 }
             }
         }
-
+        //Ingresa letras restantes a n_abc
         for($j =0; $j < 27;$j++){
             $bool = false;
             for($k = 0; $k < $num;$k++){
@@ -34,13 +43,13 @@ function cifra_puro($texto,$palabra,$clave,$accion){
                 $num = $num + 1;
             }
         }
-    if ($accion == 1){
+        //Cifrado del texto
         for($i = 0; $i < strlen($texto) ;$i++){
           if($texto[$i] != " "){
              $esta = false;
                 for($e = 0; $esta == false ; $e++){
                     if($texto[$i] == $abc[$e]){
-                      $e = $e - $clave;
+                      $e = $e - $desplazamiento;
 
                         if($e > 26){
                             $e = $e - 27;
@@ -55,55 +64,5 @@ function cifra_puro($texto,$palabra,$clave,$accion){
                 }
             }    
         }
-    }else{
-        if($accion == 0){
-            for($i = 0; $i < strlen($texto) ;$i++){
-              if($texto[$i] != " "){
-                 $esta = false;
-                    for($e = 0; $esta == false ; $e++){
-                        if($texto[$i] == $n_abc[$e]){
-                          $e = $e - $clave;
-
-                            if($e > 26){
-                                $e = $e - 27;
-                            }else{
-                                if($e < 0){
-                              $e = $e + 27;
-                                } 
-                            }
-                            $esta = true;
-                         $texto[$i] = $abc[$e];
-                        }
-                    }
-                }    
-            }
-        }
-    }
     return $texto;
 }
-
-if ($_POST["texto"] != ""&&$_POST["cifrado"] != ""&& $_POST["desplazamiento"] != ""&& $_POST["palabra"] != ""  ) {
-
-    $_POST["texto"] = strtolower($_POST["texto"]);
-    echo "<br>";
-
-    if ($_POST["cifrado"] == "cifrar") {
-        echo ("<strong>"."TEXTO CIFRADO"."</strong>");
-        echo "<br />";
-        $accion = 1;
-        $cifrado = cifra_puro($_POST["texto"],$_POST["palabra"],$_POST["desplazamiento"],$accion);
-    }else{
-        if ($_POST["cifrado"] == "descifrar") {
-            echo ("<strong>"."TEXTO DESCIFRADO"."</strong>");
-            echo "<br />";
-            $accion = 0;
-            $cifrado = cifra_puro($_POST["texto"],$_POST["palabra"],-$_POST["desplazamiento"],$accion);
-        }
-    }
-    echo $cifrado."<br>"."<br>";
-    echo ("<strong>"."Texto original"."</strong>")."<br>";
-    echo $_POST["texto"]."<br>";
-    
-    print ('<br /><a href="desplaza_palabra.php">Volver</a> ');
-}
-?>
